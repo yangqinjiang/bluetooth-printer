@@ -7,6 +7,7 @@ var printerutil = require("./lib/printerutil.js");
 
 
 module.exports = {
+  Printer: printer.Printer,
   PrinterJobs: printer.printerjobs,
   PrinterUtil: printerutil
 };

@@ -1,4 +1,4 @@
-const { PrinterJobs, PrinterUtil } = require('../index')
+const { PrinterJobs, PrinterUtil, Printer } = require('../index')
 var expect = require('chai').expect;
 
 describe('测试PrinterJobs', function () {
@@ -51,5 +51,11 @@ describe('测试PrinterJobs', function () {
         //console.log('ArrayBuffer', 'length: ' + buffer.byteLength, ' hex: ' + ab2hex(buffer).substring(0, 10) + '...');
         expect(buffer.byteLength).to.be.equal(490);
         expect(ab2hex(buffer).substring(0, 10)).to.be.equal('1b,40,2d,2');
+
+        let printer = new Printer(20, { deviceId: 0, serviceId: 0, characteristicId: 0 })
+        printer.Write(buffer)
+
     });
+
+
 });
