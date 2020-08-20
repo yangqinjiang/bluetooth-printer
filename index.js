@@ -4,10 +4,12 @@
 var printer = require("./lib/printer.js");
 // console.log(printer.printerjobs)
 var printerutil = require("./lib/printerutil.js");
+var generator = require("./lib/generator.js");
 
 
 module.exports = {
   Printer: printer.Printer,
   PrinterJobs: printer.printerjobs,
-  PrinterUtil: printerutil
+  PrinterUtil: printerutil,
+  Generator: generator
 };

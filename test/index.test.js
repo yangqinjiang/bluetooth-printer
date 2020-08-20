@@ -1,4 +1,4 @@
-const { PrinterJobs, PrinterUtil, Printer } = require('../index')
+const { PrinterJobs, PrinterUtil, Printer, Generator } = require('../index')
 var expect = require('chai').expect;
 
 describe('测试PrinterJobs', function () {
@@ -52,16 +52,23 @@ describe('测试PrinterJobs', function () {
         expect(buffer.byteLength).to.be.equal(490);
         expect(ab2hex(buffer).substring(0, 10)).to.be.equal('1b,40,2d,2');
 
-        let printer = new Printer(20, { deviceId: 0, serviceId: 0, characteristicId: 0 }, function (current, total) {
-            console.log(`${current}/${total}`)
-        })
+        let printer = new Printer(20)
+        printer.SendToPrinter = function (write_buf, idx, total) {
+            return new Promise(function (resolve, reject) {
+                setTimeout(function () {
+                    console.log(`第 ${idx}/${total} 次发送数据大小为：${write_buf.byteLength}`)
+                    console.debug(`SendToPrinter:打印-${idx}/${total}`, (new Date()).toUTCString())
+                    resolve();
+                }, 20)
+            });
+        }
         printer.Write(buffer)
 
     });
     describe('测试yield与Generator', function () {
         function getFoo(idx) {
             return new Promise(function (resolve, reject) {
-                resolve(`打印-${idx}`);
+                resolve(`模拟打印-${idx}`);
             });
         }
 
@@ -76,25 +83,41 @@ describe('测试PrinterJobs', function () {
                 console.log(e);
             }
         };
+        let gen = new Generator.Generator()
+        gen.Run(g)
+    })
 
-        function run(generator) {
-            const it = generator();
-
-            function go(result) {
-                if (result.done) return result.value;
-
-                return result.value.then(function (value) {
-                    console.log('then next')
-                    return go(it.next(value));
-                }, function (error) {
-                    return go(it.throw(error));
-                });
-            }
-
-            go(it.next());
+    describe('wx.writeBLECharacteristicValue', function () {
+        return
+        if (typeof wx != 'object') {
+            throw new Error("此函数必须在微信小程序内运行.")
+        }
+        if (typeof wx.writeBLECharacteristicValue != 'function') {
+            throw new Error("wx.writeBLECharacteristicValue 必须是一个函数")
         }
 
-        run(g);
+        wx.writeBLECharacteristicValue({
+            deviceId: this._writeMetaData.deviceId || 0,
+            serviceId: this._writeMetaData.serviceId || 0,
+            characteristicId: this._writeMetaData.characteristicId || 0,
+            value: write_buf,
+            success: function (res) {
+                console.log(res)
+                if (0 !== res.errCode) {
+                    console.error(res)
+                    throw new Error(`打印失败,原因:${res.errMsg}`)
+                }
+
+            },
+            fail: function (e) {
+                console.error("向低功耗蓝牙设备特征值中写入二进制数据失败=", e)
+                //恢复状态
+                throw new Error(`向打印机写入数据失败,请重新连接打印机 ， 检查蓝牙是否开启。\n${e.errMsg}`)
+            },
+            complete: function () {
+                //  wx.hideLoading();
+            }
+        })
     })
 
 });
