@@ -52,7 +52,9 @@ describe('测试PrinterJobs', function () {
         expect(buffer.byteLength).to.be.equal(490);
         expect(ab2hex(buffer).substring(0, 10)).to.be.equal('1b,40,2d,2');
 
-        let printer = new Printer(20, { deviceId: 0, serviceId: 0, characteristicId: 0 })
+        let printer = new Printer(20, { deviceId: 0, serviceId: 0, characteristicId: 0 }, function (current, total) {
+            console.log(`${current}/${total}`)
+        })
         printer.Write(buffer)
 
     });
