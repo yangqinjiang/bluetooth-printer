@@ -86,38 +86,4 @@ describe('测试PrinterJobs', function () {
         let gen = new Generator.Generator()
         gen.Run(g)
     })
-
-    describe('wx.writeBLECharacteristicValue', function () {
-        return
-        if (typeof wx != 'object') {
-            throw new Error("此函数必须在微信小程序内运行.")
-        }
-        if (typeof wx.writeBLECharacteristicValue != 'function') {
-            throw new Error("wx.writeBLECharacteristicValue 必须是一个函数")
-        }
-
-        wx.writeBLECharacteristicValue({
-            deviceId: this._writeMetaData.deviceId || 0,
-            serviceId: this._writeMetaData.serviceId || 0,
-            characteristicId: this._writeMetaData.characteristicId || 0,
-            value: write_buf,
-            success: function (res) {
-                console.log(res)
-                if (0 !== res.errCode) {
-                    console.error(res)
-                    throw new Error(`打印失败,原因:${res.errMsg}`)
-                }
-
-            },
-            fail: function (e) {
-                console.error("向低功耗蓝牙设备特征值中写入二进制数据失败=", e)
-                //恢复状态
-                throw new Error(`向打印机写入数据失败,请重新连接打印机 ， 检查蓝牙是否开启。\n${e.errMsg}`)
-            },
-            complete: function () {
-                //  wx.hideLoading();
-            }
-        })
-    })
-
 });
