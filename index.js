@@ -9,7 +9,7 @@ var generator = require("./lib/generator.js");
 
 module.exports = {
   Printer: printer.Printer,
-  PrinterJobs: printer.printerjobs,
+  PrintDataBuilder: printer.PrintDataBuilder,
   PrinterUtil: printerutil,
   Generator: generator
 };

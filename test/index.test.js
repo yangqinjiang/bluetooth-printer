@@ -1,8 +1,8 @@
-const { PrinterJobs, PrinterUtil, Printer, Generator } = require('../index')
+const { PrintDataBuilder, PrinterUtil, Printer, Generator } = require('../index')
 var expect = require('chai').expect;
 
-describe('测试PrinterJobs', function () {
-    describe('测试PrinterJobs函数', function () {
+describe('测试PrintDataBuilder', function () {
+    describe('测试PrintDataBuilder函数', function () {
         // ArrayBuffer转16进度字符串示例
         function ab2hex(buffer) {
             const hexArr = Array.prototype.map.call(
@@ -13,8 +13,8 @@ describe('测试PrinterJobs', function () {
             )
             return hexArr.join(',')
         }
-        let printerJobs = new PrinterJobs();
-        printerJobs
+        let builder = new PrintDataBuilder();
+        builder
             .print(PrinterUtil.fillAround('打印测试 开始'))
             .print(PrinterUtil.formatDateTime(new Date()))
             .print(PrinterUtil.fillLine())
@@ -47,8 +47,8 @@ describe('测试PrinterJobs', function () {
             .print(PrinterUtil.fillAround('打印测试 结束'))
             .println();
 
-        let buffer = printerJobs.buffer();
-        //console.log('ArrayBuffer', 'length: ' + buffer.byteLength, ' hex: ' + ab2hex(buffer).substring(0, 10) + '...');
+        let buffer = builder.buffer();
+
         expect(buffer.byteLength).to.be.equal(490);
         expect(ab2hex(buffer).substring(0, 10)).to.be.equal('1b,40,2d,2');
 
