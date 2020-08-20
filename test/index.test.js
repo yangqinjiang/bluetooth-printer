@@ -58,6 +58,43 @@ describe('测试PrinterJobs', function () {
         printer.Write(buffer)
 
     });
+    describe('测试yield与Generator', function () {
+        function getFoo(idx) {
+            return new Promise(function (resolve, reject) {
+                resolve(`打印-${idx}`);
+            });
+        }
 
+        const g = function* () {
+
+            try {
+                for (var i = 0; i < 20; i++) {
+                    console.log(yield getFoo(i));
+                }
+
+            } catch (e) {
+                console.log(e);
+            }
+        };
+
+        function run(generator) {
+            const it = generator();
+
+            function go(result) {
+                if (result.done) return result.value;
+
+                return result.value.then(function (value) {
+                    console.log('then next')
+                    return go(it.next(value));
+                }, function (error) {
+                    return go(it.throw(error));
+                });
+            }
+
+            go(it.next());
+        }
+
+        run(g);
+    })
 
 });
