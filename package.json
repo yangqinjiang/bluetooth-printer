@@ -7,7 +7,8 @@
     "index.js",
     "lib/commands.js",
     "lib/printer.js",
-    "lib/printerjobs.js",
+    "lib/generator.js",
+    "lib/PrintDataBuilder.js",
     "lib/printerutil.js"
   ],
   "scripts": {
