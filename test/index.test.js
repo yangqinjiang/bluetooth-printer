@@ -51,8 +51,21 @@ describe('测试PrintDataBuilder', function () {
 
         expect(buffer.byteLength).to.be.equal(490);
         expect(ab2hex(buffer).substring(0, 10)).to.be.equal('1b,40,2d,2');
-
-        let printer = new Printer(20)
+        let eventHandler = {
+            onStartEvent: function (e) {
+                console.log('call onStartEvent eventHandler')
+            },
+            onDoneEvent: function (e) {
+                console.log('call onDoneEvent eventHandler')
+            },
+            onNextEvent: function (e) {
+                console.log('call onNextEvent eventHandler')
+            },
+            onErrorEvent: function (e) {
+                console.log('call onErrorEvent eventHandler')
+            },
+        }
+        let printer = new Printer(20, eventHandler, false)
         printer.SendToPrinter = function (write_buf, idx, total) {
             return new Promise(function (resolve, reject) {
                 setTimeout(function () {
