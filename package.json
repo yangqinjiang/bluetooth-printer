@@ -1,6 +1,6 @@
 {
   "name": "bluetooth-printer",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "bluetooth-printer",
   "main": "index.js",
   "files": [

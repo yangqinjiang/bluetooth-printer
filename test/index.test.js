@@ -62,16 +62,21 @@ describe('测试PrintDataBuilder', function () {
                 console.log('call onNextEvent eventHandler')
             },
             onErrorEvent: function (e) {
-                console.log('call onErrorEvent eventHandler')
+                console.log('call onErrorEvent eventHandler', e)
             },
         }
-        let printer = new Printer(20, eventHandler, false)
+        let printer = new Printer(20, eventHandler, !false)
         printer.SendToPrinter = function (write_buf, idx, total) {
             return new Promise(function (resolve, reject) {
                 setTimeout(function () {
                     console.log(`第 ${idx}/${total} 次发送数据大小为：${write_buf.byteLength}`)
                     console.debug(`SendToPrinter:打印-${idx}/${total}`, (new Date()).toUTCString())
-                    resolve();
+                    if (idx == total - 1) {
+                        reject(new Error('your error'))
+                    } else {
+                        resolve();
+                    }
+
                 }, 20)
             });
         }
